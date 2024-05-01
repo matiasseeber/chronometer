@@ -1,9 +1,9 @@
 import { StyleSheet, View } from 'react-native';
-import colors from './resources/colors';
+import colors from '../resources/colors';
 import { useEffect, useState } from 'react';
-import TimeText from './components/timeText';
-import LapsContainer from './components/lapsContainer';
-import TwoButtons from './components/twoButtons';
+import TimeText from '../components/timeText';
+import LapsContainer from '../components/lapsContainer';
+import TwoButtons from '../components/twoButtons';
 
 const btnFontSize = 17;
 const btnFontDiameter = 90;

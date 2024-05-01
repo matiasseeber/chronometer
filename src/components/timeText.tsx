@@ -4,11 +4,12 @@ import { formatTime } from '../helpers/formatTime';
 
 interface TimeTextProps {
     time: number;
+    fontSize?: number;
 }
 
-const TimeText: React.FC<TimeTextProps> = ({ time }) => {
+const TimeText: React.FC<TimeTextProps> = ({ time, fontSize = 90 }) => {
     return (
-        <Text style={styles.text}>
+        <Text style={{...styles.text, fontSize }}>
             {formatTime(time)}
         </Text>
     );
@@ -17,7 +18,6 @@ const TimeText: React.FC<TimeTextProps> = ({ time }) => {
 const styles = StyleSheet.create({
     text: {
         color: "white",
-        fontSize: 90,
         fontWeight: '200',
         width: "100%",
         textAlign: "center"
