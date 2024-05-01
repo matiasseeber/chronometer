@@ -1,10 +1,11 @@
 import { StyleSheet, View } from 'react-native';
-import Main from './src/main';
+import Chronometer from './src/chronometer';
 
 export default function App() {
+  //AGREGAR UN MAIN ACA CON LA NAVEGACION PARA CADA VISTA
   return (
     <View style={styles.container}>
-      <Main />
+      <Chronometer />
     </View>
   );
 }
