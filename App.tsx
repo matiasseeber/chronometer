@@ -8,25 +8,23 @@ import { MaterialIcons } from "@expo/vector-icons";
 
 const Tab = createBottomTabNavigator();
 
-const screenOptions = {
-  tabBarShowLabel: false,
-  headerShown: false,
-  tabBarStyle: {
-    position: "absolute",
-    bottom: 0,
-    right: 0,
-    left: 0,
-    elevation: 0,
-    height: 60,
-    backgroundColor: "#121212",
-  },
-};
-
 export default function App() {
-  //AGREGAR UN MAIN ACA CON LA NAVEGACION PARA CADA VISTA
   return (
     <NavigationContainer>
-      <Tab.Navigator screenOptions={screenOptions}>
+      <Tab.Navigator screenOptions={
+        {
+          tabBarShowLabel: false,
+          headerShown: false,
+          tabBarStyle: {
+            bottom: 0,
+            right: 0,
+            left: 0,
+            elevation: 0,
+            height: 70,
+            backgroundColor: "#121212",
+          },
+        }
+      }>
         <Tab.Screen
           name="Chronometer"
           component={Chronometer}
@@ -71,11 +69,3 @@ export default function App() {
     </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "black",
-    paddingTop: 50,
-  },
-});

@@ -56,7 +56,6 @@ const Timer: React.FC<TimerProps> = ({ TrailWidth = 8, onComplete }) => {
         colors="#f78801"
         trailStrokeWidth={TrailWidth}
         strokeWidth={TrailWidth}
-        onUpdate={(time) => console.log(time)}
         size={300}
         onComplete={onComplete}
         key={key}
