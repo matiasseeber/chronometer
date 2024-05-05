@@ -5,6 +5,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
+import colors from "./src/resources/colors";
 
 const Tab = createBottomTabNavigator();
 
@@ -37,9 +38,9 @@ export default function App() {
                   <MaterialIcons
                     name="timer"
                     size={24}
-                    color={focused ? "#d88e20" : "#383838"}
+                    color={focused ? colors.orange : colors.middleGray}
                   />
-                  <Text style={{ color: "#7c7c7c" }}>Chronómetro</Text>
+                  <Text style={{ color: colors.middleGray }}>Chronómetro</Text>
                 </View>
               );
             },
@@ -57,9 +58,9 @@ export default function App() {
                   <Ionicons
                     name="timer"
                     size={24}
-                    color={focused ? "#d88e20" : "#383838"}
+                    color={focused ? colors.orange : colors.middleGray}
                   />
-                  <Text style={{ color: "#7c7c7c" }}>Temporizador</Text>
+                  <Text style={{ color: colors.middleGray }}>Temporizador</Text>
                 </View>
               );
             },

@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import TimeText from '../components/timeText';
 import LapsContainer from '../components/lapsContainer';
 import TwoButtons from '../components/twoButtons';
+import { SaveLap } from '../helpers/AsyncStorage';
 
 const btnFontSize = 17;
 const btnFontDiameter = 90;
@@ -45,8 +46,10 @@ export default function Chronometer() {
             setLaps([]);
         } else {
             const current_timestamp = new Date().getTime();
-            setLaps(previousLaps => [...previousLaps, current_timestamp - initTimestamp]);
+            const lapTime = current_timestamp - initTimestamp;
+            setLaps(previousLaps => [...previousLaps, lapTime]);
             initTimestamp = current_timestamp;
+            SaveLap(lapTime);
         }
     }
 
