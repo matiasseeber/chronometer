@@ -5,6 +5,7 @@ import TimeText from '../components/timeText';
 import LapsContainer from '../components/lapsContainer';
 import TwoButtons from '../components/twoButtons';
 import { SaveLap } from '../helpers/AsyncStorage';
+import { getCurrentPositionAsync, LocationObject } from 'expo-location';
 
 const btnFontSize = 17;
 const btnFontDiameter = 90;
@@ -17,20 +18,31 @@ let startBtnInfo = {
 
 let initTimestamp: number;
 
+const getCurrentPosition = async () => await getCurrentPositionAsync({})
+
 export default function Chronometer() {
     const [isRunning, setIsRunning] = useState(false);
     const [timer, setTimer] = useState(0);
+    const [initLocation, setInitLocation] = useState({} as LocationObject);
     const [laps, setLaps] = useState([] as number[]);
 
     const isPaused = !isRunning && !!timer;
 
-    const onClickInitBtn = () => {
+    let promise: Promise<unknown>;
+
+    const onClickInitBtn = async () => {
         const newValue: boolean = !isRunning;
         if (newValue) {
             startBtnInfo.backgroundColor = colors.darkRed;
             startBtnInfo.textColor = colors.lightRed;
             startBtnInfo.text = "Detener";
-            if (timer == 0) initTimestamp = new Date().getTime();
+            if (timer == 0) {
+                initTimestamp = new Date().getTime();
+                promise = new Promise(async () => {
+                    const location = await getCurrentPosition();
+                    setInitLocation(location);
+                })
+            }
         } else {
             startBtnInfo.backgroundColor = colors.darkGreen;
             startBtnInfo.textColor = colors.lightGreen;
@@ -49,7 +61,12 @@ export default function Chronometer() {
             const lapTime = current_timestamp - initTimestamp;
             setLaps(previousLaps => [...previousLaps, lapTime]);
             initTimestamp = current_timestamp;
-            SaveLap(lapTime);
+            new Promise(async () => {
+                await promise;
+                let location = await getCurrentPosition();
+                SaveLap(lapTime, initLocation!, location);
+                setInitLocation(location);
+            })
         }
     }
 
