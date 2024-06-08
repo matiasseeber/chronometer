@@ -10,9 +10,8 @@ import {
 } from "react-native";
 import colors from "../resources/colors";
 
-import appFirebase from "../../credenciales";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-const auth = getAuth(appFirebase);
+import { auth } from "../../credenciales";
+import { signInWithEmailAndPassword } from "firebase/auth";
 
 const Login = ({ navigation }: any) => {
   const [email, setEmail] = useState("");
