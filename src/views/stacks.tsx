@@ -5,6 +5,7 @@ import Timer from "./timer";
 import colors from "../resources/colors";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { HistoryList } from "./historyList";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -53,6 +54,22 @@ export function MainTabs() {
                 color={focused ? colors.orange : colors.middleGray}
               />
               <Text style={{ color: colors.middleGray }}>Temporizador</Text>
+            </View>
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="History"
+        component={HistoryList}
+        options={{
+          tabBarIcon: ({ focused }) => (
+            <View style={{ alignItems: "center", justifyContent: "center" }}>
+              <Ionicons
+                name="list"
+                size={24}
+                color={focused ? colors.orange : colors.middleGray}
+              />
+              <Text style={{ color: colors.middleGray }}>Historial</Text>
             </View>
           ),
         }}

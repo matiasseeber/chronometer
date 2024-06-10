@@ -4,6 +4,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 import Login from "./src/views/login";
 import { MainTabs } from "./src/views/stacks";
+import { HistoryList } from "./src/views/historyList";
 
 const Stack = createStackNavigator();
 
