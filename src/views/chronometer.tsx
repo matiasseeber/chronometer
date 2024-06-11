@@ -4,8 +4,8 @@ import { useEffect, useState } from "react";
 import TimeText from "../components/timeText";
 import LapsContainer from "../components/lapsContainer";
 import TwoButtons from "../components/twoButtons";
-import { SaveLap } from "../helpers/AsyncStorage";
 import { getCurrentPositionAsync, LocationObject } from "expo-location";
+import { addDataToFirestore } from "../helpers/fireStore";
 
 const btnFontSize = 17;
 const btnFontDiameter = 90;
@@ -15,6 +15,25 @@ let startBtnInfo = {
   textColor: colors.lightGreen,
   text: "Iniciar",
 };
+
+export const SaveLap = async (lapTime: number, init_point: LocationObject, end_point: LocationObject) => {
+  const data = JSON.stringify({
+      lapTime: lapTime.toString(),
+      init_point: {
+          lat: init_point.coords.latitude,
+          lon: init_point.coords.longitude,
+          accuracy: init_point.coords.accuracy,
+          timestamp: init_point.timestamp
+      },
+      end_point: {
+          lat: end_point.coords.latitude,
+          lon: end_point.coords.longitude,
+          accuracy: end_point.coords.accuracy,
+          timestamp: end_point.timestamp
+      }
+  });
+  addDataToFirestore(data);
+}
 
 let initTimestamp: number;
 

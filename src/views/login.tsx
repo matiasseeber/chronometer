@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -12,10 +12,15 @@ import colors from "../resources/colors";
 
 import { auth } from "../../credenciales";
 import { signInWithEmailAndPassword } from "firebase/auth";
+import { requestLocationPermission } from "../helpers/permissions";
 
 const Login = ({ navigation }: any) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  useEffect(() => {
+    requestLocationPermission();
+  }, [])
 
   const login = async () => {
     try {
@@ -60,7 +65,6 @@ const Login = ({ navigation }: any) => {
       //     "kQ0s0cqtThaarFqsKVSy7EKes9L2"
       //   }
       //}
-      Alert.alert("Sesión iniciada con éxito");
       navigation.navigate("Main");
     } catch (error) {
       console.log(error);
@@ -107,7 +111,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: colors.lightGray,
+    backgroundColor: "black",
   },
   profile: {
     width: 100,
@@ -117,11 +121,10 @@ const styles = StyleSheet.create({
   },
   tarjeta: {
     margin: 20,
-    backgroundColor: colors.middleGray,
-    borderRadius: 20,
+    backgroundColor: colors.darkGray,
     width: "90%",
     padding: 20,
-    shadowColor: colors.darkGray,
+    shadowColor: colors.lightGray,
     shadowOffset: {
       width: 0,
       height: 2,
@@ -132,16 +135,14 @@ const styles = StyleSheet.create({
   },
   cajaTexto: {
     paddingVertical: 10,
-    backgroundColor: "#eff2ef",
-    borderRadius: 30,
-    marginVertical: 10,
+    backgroundColor: colors.lightGray,
+    marginVertical: 10
   },
   padreBotton: {
     alignItems: "center",
   },
   cajaBoton: {
-    backgroundColor: "#525FE1",
-    borderRadius: 30,
+    backgroundColor: colors.orange,
     paddingVertical: 10,
     width: 150,
     marginTop: 20,
