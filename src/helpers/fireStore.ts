@@ -1,5 +1,6 @@
 import { doc, serverTimestamp, getDoc, addDoc, collection, query, getDocs } from "firebase/firestore";
 import { db, auth } from '../../credenciales';  // Adjust the path as needed
+import { Lap } from "../views/historyList"
 
 export async function addDataToFirestore(data: any, colectionName: string = "laps") {
     const user = auth.currentUser;
@@ -29,7 +30,7 @@ export async function getDataFromFirestore(collectionName: string = "laps") {
             if (!querySnapshot.empty) {
                 const laps = querySnapshot.docs.map(doc => doc.data());
                 console.log('User laps:', laps);
-                return laps;
+                return (laps as Lap[]).sort((a, b) => b.end_point.timestamp - a.end_point.timestamp);
             } else {
                 console.log('No laps found for user!');
                 return [];

@@ -1,11 +1,12 @@
 import { StyleSheet, View } from "react-native";
 import colors from "../resources/colors";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import TimeText from "../components/timeText";
 import LapsContainer from "../components/lapsContainer";
 import TwoButtons from "../components/twoButtons";
 import { getCurrentPositionAsync, LocationObject } from "expo-location";
 import { addDataToFirestore } from "../helpers/fireStore";
+import { LapContext, fetchLaps } from "../context/context";
 
 const btnFontSize = 17;
 const btnFontDiameter = 90;
@@ -16,25 +17,6 @@ let startBtnInfo = {
   text: "Iniciar",
 };
 
-export const SaveLap = async (lapTime: number, init_point: LocationObject, end_point: LocationObject) => {
-  const data = JSON.stringify({
-      lapTime: lapTime.toString(),
-      init_point: {
-          lat: init_point.coords.latitude,
-          lon: init_point.coords.longitude,
-          accuracy: init_point.coords.accuracy,
-          timestamp: init_point.timestamp
-      },
-      end_point: {
-          lat: end_point.coords.latitude,
-          lon: end_point.coords.longitude,
-          accuracy: end_point.coords.accuracy,
-          timestamp: end_point.timestamp
-      }
-  });
-  addDataToFirestore(data);
-}
-
 let initTimestamp: number;
 
 const getCurrentPosition = async () => await getCurrentPositionAsync({});
@@ -44,10 +26,35 @@ export default function Chronometer() {
   const [timer, setTimer] = useState(0);
   const [initLocation, setInitLocation] = useState({} as LocationObject);
   const [laps, setLaps] = useState([] as number[]);
-
+  const { setLaps: setLapsContext } = useContext(LapContext);
   const isPaused = !isRunning && !!timer;
 
   let promise: Promise<unknown>;
+
+  const setLapsGlobal = async () => {
+    const data = await fetchLaps();
+    setLapsContext(data);
+  }
+
+  const SaveLap = async (lapTime: number, init_point: LocationObject, end_point: LocationObject) => {
+    const data = JSON.stringify({
+      lapTime: lapTime.toString(),
+      init_point: {
+        lat: init_point.coords.latitude,
+        lon: init_point.coords.longitude,
+        accuracy: init_point.coords.accuracy,
+        timestamp: init_point.timestamp
+      },
+      end_point: {
+        lat: end_point.coords.latitude,
+        lon: end_point.coords.longitude,
+        accuracy: end_point.coords.accuracy,
+        timestamp: end_point.timestamp
+      }
+    });
+    await addDataToFirestore(data);
+    setLapsGlobal();
+  }
 
   const onClickInitBtn = async () => {
     const newValue: boolean = !isRunning;
@@ -88,6 +95,10 @@ export default function Chronometer() {
       });
     }
   };
+
+  useEffect(() => {
+    setLapsGlobal();
+  }, [])
 
   useEffect(() => {
     let interval: NodeJS.Timeout;

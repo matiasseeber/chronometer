@@ -1,16 +1,17 @@
-import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import React, { useContext, useEffect, useState } from "react";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
 import colors from "../resources/colors";
 import { getDataFromFirestore } from "../helpers/fireStore";
 import { formatTime } from "../helpers/formatTime";
+import { LapContext } from "../context/context";
 
-interface Lap {
+export interface Lap {
   end_point: Point;
   init_point: Point;
   lapTime: number;
 }
 
-interface Point {
+export interface Point {
   accuracy: number;
   lat: number;
   lon: number;
@@ -18,16 +19,7 @@ interface Point {
 }
 
 export function HistoryList() {
-  const [laps, setLaps] = useState([] as Lap[]);
-
-  const fetchData = async () => {
-    const laps: Lap[] = (await getDataFromFirestore()) as Lap[];
-    setLaps(laps);
-  }
-
-  useEffect(() => {
-    fetchData();
-  }, [])
+  const { laps } = useContext(LapContext)
 
   const formatDate = (timestamp: number) => {
     const date = new Date(timestamp);
@@ -37,30 +29,35 @@ export function HistoryList() {
   return (
     <View style={styles.container}>
       <Text style={styles.header}>Historial</Text>
-      <View style={styles.table}>
-        <View style={styles.row}>
-          <Text style={styles.cell}>Fecha</Text>
-          <Text style={styles.cell}>Tiempo</Text>
+      <ScrollView style={styles.scroll} contentContainerStyle={{display: "flex", alignItems: "center", justifyContent: "center"}}>
+        <View style={styles.table}>
+          <View style={styles.row}>
+            <Text style={styles.cell}>Fecha</Text>
+            <Text style={styles.cell}>Tiempo</Text>
+          </View>
+          {
+            laps.map((item, index) => (
+              <View style={styles.row} key={index}>
+                <Text style={styles.cell}>{formatDate(item.end_point.timestamp)}</Text>
+                <Text style={styles.cell}>{formatTime(item.lapTime / 1000)}</Text>
+              </View>
+            ))
+          }
         </View>
-        {
-          laps.map((item, index) => (
-            <View style={styles.row} key={index}>
-              <Text style={styles.cell}>{formatDate(item.end_point.timestamp)}</Text>
-              <Text style={styles.cell}>{formatTime(item.lapTime/1000)}</Text>
-            </View>
-          ))
-        }
-      </View>
+      </ScrollView>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  scroll: {
+    width: "100%",
+  },
   container: {
-    flex: 1,
+    display: "flex",
     backgroundColor: "black",
     alignItems: "center",
-    justifyContent: "flex-start",
+    justifyContent: "center",
     paddingTop: 100,
     paddingBottom: 30,
   },
@@ -73,6 +70,9 @@ const styles = StyleSheet.create({
     width: "90%",
     borderColor: "white",
     borderWidth: 1,
+    alignItems: "center",
+    justifyContent: "flex-start",
+    flex: 1,
   },
   row: {
     flexDirection: "row",
