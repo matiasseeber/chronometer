@@ -5,6 +5,7 @@ import { CountdownCircleTimer } from "react-native-countdown-circle-timer";
 import TimeText from "../components/timeText";
 import TwoButtons from "../components/twoButtons";
 import colors from "../resources/colors";
+import { Timepicker, DurationParams } from "../components/timepicker";
 
 interface TimerProps {
   TrailWidth?: number;
@@ -22,25 +23,34 @@ let startBtnInfo = {
 
 const Timer: React.FC<TimerProps> = ({ TrailWidth = 8, onComplete }) => {
   const [isRunning, setIsRunning] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
   const [timer, setTimer] = useState(60);
+  const [initValue, setInitvalue] = useState({ hours: 0, minutes: 0, seconds: 1 } as DurationParams);
   const [key, setKey] = useState(0);
 
+  const onDurationChange = (duration: DurationParams) => {
+    setTimer(duration.hours * 60 * 60 + duration.minutes * 60 + duration.seconds);
+    setInitvalue(duration);
+  }
+
   const onClickInitBtn = () => {
-    const newValue: boolean = !isRunning;
-    if (newValue) {
+    if (!isRunning || !isPaused) {
       startBtnInfo.backgroundColor = colors.darkRed;
       startBtnInfo.textColor = colors.lightRed;
       startBtnInfo.text = "Detener";
+      setIsPaused(true);
+      setIsRunning(true);
     } else {
       startBtnInfo.backgroundColor = colors.darkGreen;
       startBtnInfo.textColor = colors.lightGreen;
       startBtnInfo.text = "Iniciar";
+      setIsPaused(false);
     }
-    setIsRunning(newValue);
   };
 
   const onClickLeftBtn = () => {
     setIsRunning(false);
+    setIsPaused(false);
     setKey((prevKey) => prevKey + 1);
     startBtnInfo.backgroundColor = colors.darkGreen;
     startBtnInfo.textColor = colors.lightGreen;
@@ -49,8 +59,10 @@ const Timer: React.FC<TimerProps> = ({ TrailWidth = 8, onComplete }) => {
 
   return (
     <View style={styles.container}>
-      <CountdownCircleTimer
-        isPlaying={isRunning}
+      {
+        isRunning ? 
+        <CountdownCircleTimer
+        isPlaying={isPaused}
         duration={timer}
         initialRemainingTime={timer}
         colors="#f78801"
@@ -62,6 +74,9 @@ const Timer: React.FC<TimerProps> = ({ TrailWidth = 8, onComplete }) => {
       >
         {({ remainingTime }) => <TimeText time={remainingTime} fontSize={60} />}
       </CountdownCircleTimer>
+      :
+      <Timepicker onDurationChange={onDurationChange} initialValue={initValue} />
+      }
       <View style={styles.TwoButtonsContainer}>
         <TwoButtons
           leftBtnDisabled={timer == 0}
