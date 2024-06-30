@@ -60,6 +60,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     paddingTop: 100,
     paddingBottom: 30,
+    height: "100%"
   },
   header: {
     fontSize: 24,
